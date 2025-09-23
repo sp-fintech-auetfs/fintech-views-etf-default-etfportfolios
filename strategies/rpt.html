@@ -1,0 +1,572 @@
+{% set investments = [] %}
+{% if portfolio['investments']|length > 0 %}
+    {% for schemeId, investment in portfolio['investments'] %}
+        {% if investment['status'] == 'close' %}
+            {% continue %}
+        {% endif %}
+        {% set investments[schemeId] = investment %}
+    {% endfor %}
+{% endif %}
+{% if portfolio['transactions']|length > 0 %}
+    {% for transactionId, transaction in portfolio['transactions'] %}
+        {% if investments[transaction['scheme_id']] is not defined %}
+            {% set investments[transaction['scheme_id']]['transactions'] = [] %}
+        {% endif %}
+        {% if transaction['status'] == 'close' %}
+            {% continue %}
+        {% endif %}
+        {% set investments[transaction['scheme_id']]['transactions'][transactionId] = transaction %}
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col sources" id="{{componentId}}-{{sectionId}}-current">
+        <div class="row">
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'sell_transaction_id',
+                        'fieldLabel'                     : 'Select Investment to withdraw from',
+                        'fieldType'                      : 'select2',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Select a transaction to sell',
+                        'fieldRequired'                  : true,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : false,
+                        'fieldDataSelect2Options'        : investments,
+                        'fieldDataSelect2OptionsKey'     : 'scheme_id',
+                        'fieldDataSelect2OptionsValue'   : 'scheme/name',
+                        'fieldDataSelect2OptionsArray'   : true,
+                        'fieldDataSelect2OptionsSelected': ''
+                    ]
+                )}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'sell-scheme_id',
+                        'fieldLabel'                     : 'Scheme Id',
+                        'fieldType'                      : 'input',
+                        'fieldHelp'                      : true,
+                        'fieldDisabled'                  : true,
+                        'fieldHidden'                    : true,
+                        'fieldHelpTooltipContent'        : 'Scheme Id for the scheme',
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : false,
+                        'fieldValue'                     : ''
+                    ]
+                )}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'sell-open_orders',
+                        'fieldLabel'                     : 'Open Orders',
+                        'fieldType'                      : 'html',
+                        'fieldAdditionalClass'           : 'mb-0',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Open orders for the scheme',
+                        'fieldRequired'                  : false,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnUpdate'           : true,
+                        'fieldHtmlContent'               : '-'
+                    ]
+                )}}
+            </div>
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'sell-symbol',
+                        'fieldLabel'                     : 'Symbol',
+                        'fieldType'                      : 'html',
+                        'fieldAdditionalClass'           : 'mb-0',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Symbol for the scheme',
+                        'fieldRequired'                  : false,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnUpdate'           : true,
+                        'fieldHtmlContent'               : '-'
+                    ]
+                )}}
+            </div>
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'sell-available_amount',
+                        'fieldLabel'                     : 'Available Amount',
+                        'fieldType'                      : 'html',
+                        'fieldAdditionalClass'           : 'mb-0',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Available Amount',
+                        'fieldRequired'                  : false,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnUpdate'           : true,
+                        'fieldHtmlContent'               : '-'
+                    ]
+                )}}
+            </div>
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'sell-available_units',
+                        'fieldLabel'                     : 'Available Units',
+                        'fieldType'                      : 'html',
+                        'fieldAdditionalClass'           : 'mb-0',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Available units',
+                        'fieldRequired'                  : false,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnUpdate'           : true,
+                        'fieldHtmlContent'               : '-'
+                    ]
+                )}}
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'return_percentage_threshold',
+                        'fieldLabel'                     : 'Return percentage threshold',
+                        'fieldType'                      : 'input',
+                        'fieldGroupPreAddonText'         : '%',
+                        'fieldInputTypeTextFilter'       : 'positiveFloat',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Return percentage threshold to reach to sell the order. Example: if you set it to 20% the system will calculate nav return percentage for each day from there till the end date. Once the percentage is reached, the order will be sold.',
+                        'fieldRequired'                  : true,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : false,
+                        'fieldValue'                     : '20'
+                    ]
+                )}}
+            </div>
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'start_after_x_days',
+                        'fieldLabel'                     : 'Start after X days',
+                        'fieldType'                      : 'input',
+                        'fieldInputTypeTextFilter'       : 'positiveInt',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Start after X days of the purchase date. Example: If you want to start checking after 1 year since the purchase date, enter 365. Usually useful for Long Term Capital Gain Tax.',
+                        'fieldRequired'                  : true,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : false,
+                        'fieldValue'                     : '365'
+                    ]
+                )}}
+            </div>
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'end-date',
+                        'fieldLabel'                     : 'End Date',
+                        'fieldType'                      : 'flatpickr',
+                        'fieldFlatpickrClearButton'      : true,
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'End checking on date',
+                        'fieldRequired'                  : true,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : true,
+                        'fieldValue'                     : ''
+                    ]
+                )}}
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col">
+        {{adminltetags.useTag('buttons',
+            [
+                'component'                      : component,
+                'componentName'                  : componentName,
+                'componentId'                    : componentId,
+                'sectionId'                      : sectionId,
+                'buttonType'                    : 'button',
+                'buttons'                       :
+                    [
+                        'modify-all'        : [
+                            'title'                   : 'Modify All',
+                            'position'                : 'right',
+                            'disabled'                : true
+                        ],
+                        'modify-selected'        : [
+                            'title'                   : 'Modify Selected',
+                            'position'                : 'right',
+                            'disabled'                : true
+                        ]
+                    ]
+            ]
+        )}}
+    </div>
+</div>
+<hr>
+<div class="row" id="rpt-transactions-table">
+    <div class="col">
+        <table id="{{componentId}}-{{sectionId}}-rpt-transactions-table" class="table table-sm table-hover responsive nowrap mb-0" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th class="text-uppercase">ID</th>
+                    <th class="text-uppercase">DATE</th>
+                    <th class="text-uppercase">UNITS</th>
+                    <th class="text-uppercase">{{ currencySymbol }} AMOUNT</th>
+                    <th class="text-uppercase">RPT (%)</th>
+                    <th class="text-uppercase">X Days</th>
+                    <th class="text-uppercase">End Date</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<hr>
+<script>
+/* globals paginatedPNotify Swal */
+var dataCollectionComponent, dataCollectionSection, dataCollectionSectionForm;
+
+if (!window['dataCollection']['{{componentId}}']) {
+    dataCollectionComponent =
+        window['dataCollection']['{{componentId}}'] = { };
+} else {
+    dataCollectionComponent =
+        window['dataCollection']['{{componentId}}'];
+}
+if (!dataCollectionComponent['{{componentId}}-{{sectionId}}']) {
+    dataCollectionSection =
+        dataCollectionComponent['{{componentId}}-{{sectionId}}'] = { };
+} else {
+    dataCollectionSection =
+        dataCollectionComponent['{{componentId}}-{{sectionId}}'];
+}
+if (!dataCollectionSection['{{componentId}}-{{sectionId}}-form']) {
+    dataCollectionSectionForm =
+        dataCollectionSection['{{componentId}}-{{sectionId}}-form'] = { };
+} else {
+    dataCollectionSectionForm =
+        dataCollectionSection['{{componentId}}-{{sectionId}}-form'];
+}
+
+dataCollectionSection =
+    $.extend(dataCollectionSection, {
+        '{{componentId}}-{{sectionId}}-sell-open_orders'                        : {
+            afterInit: function() {
+                dataCollectionSectionForm['vars']['endDate'] = null;
+
+                dataCollectionSectionForm['funcs']['applyStrategy'] = function() {
+                    var postData = dataCollectionSectionForm['vars']['strategyPostData']();
+
+                    if (!postData) {
+                        return false;
+                    }
+
+                    if ($('#{{componentId}}-{{sectionId}}-clone_portfolio')[0].checked) {
+                        postData['clone_portfolio'] = true;
+                        postData['clone_portfolio_name'] = $('#{{componentId}}-{{sectionId}}-clone_portfolio_name').val();
+                    }
+
+
+                    $.post('{{links.url("etf/portfolios/applyStrategy")}}', postData, function(response) {
+                        if (response.tokenKey && response.token) {
+                            $("#security-token").attr("name", response.tokenKey);
+                            $("#security-token").val(response.token);
+                        }
+
+                        if (response.responseCode === 0) {
+                            $('#strategies-progress').attr('hidden', true);
+                            $('#strategies-buttons').attr('hidden', true);
+                            $('#portfolio-access-buttons').attr('hidden', false);
+                            $('#{{componentId}}-{{sectionId}}-transact-mode, #{{componentId}}-{{sectionId}}-timeline-mode').off();
+                            $('#{{componentId}}-{{sectionId}}-transact-mode, #{{componentId}}-{{sectionId}}-timeline-mode').click(function() {
+                                if ($(this)[0].id === '{{componentId}}-{{sectionId}}-transact-mode') {
+                                    $('#{{componentId}}-{{sectionId}}-portfolios-link')
+                                        .attr(
+                                            'href',
+                                            window['dataCollection'].env.httpScheme + '://' + window['dataCollection'].env.httpHost + '/' + window['dataCollection'].env.appRoute + '/' +
+                                            'etf/portfolios/q/id/' + response.responseData['portfolio_id'] + '/mode/transact'
+                                        );
+                                } else if ($(this)[0].id === '{{componentId}}-{{sectionId}}-timeline-mode') {
+                                    $('#{{componentId}}-{{sectionId}}-portfolios-link')
+                                        .attr(
+                                            'href',
+                                            window['dataCollection'].env.httpScheme + '://' + window['dataCollection'].env.httpHost + '/' + window['dataCollection'].env.appRoute + '/' +
+                                            'etf/portfolios/q/id/' + response.responseData['portfolio_id'] + '/mode/timeline'
+                                        );
+                                }
+
+                                dataCollectionSectionForm['funcs']['browse']();
+                            });
+                        } else {
+                            paginatedPNotify('error', {
+                                text : response.responseMessage
+                            });
+                        }
+                    }, 'json');
+                }
+
+                dataCollectionSectionForm['vars']['strategyPostData'] = function() {
+                    if (dataCollectionSectionForm['vars']['source'] === 'current') {
+                        if ($('#{{componentId}}-{{sectionId}}-sell_transaction_id').val() === '') {
+                            paginatedPNotify('error', {
+                                text : 'Please select investment to buy/sell from'
+                            });
+
+                            return false;
+                        }
+                    } else {
+                        if ($('#{{componentId}}-{{sectionId}}-scheme_id').val() === '') {
+                            paginatedPNotify('error', {
+                                text : 'Please select scheme'
+                            });
+
+                            return false;
+                        }
+                    }
+
+                    if (!dataCollectionSectionForm['vars']['startDate'] || !dataCollectionSectionForm['vars']['endDate']) {
+                        paginatedPNotify('error', {
+                            text : 'Please select start and end date'
+                        });
+
+                        return false;
+                    }
+
+                    if ($('#{{componentId}}-{{sectionId}}-consecutive_days').val() === '') {
+                        paginatedPNotify('error', {
+                            text : 'Please provide consecutive days to monitor'
+                        });
+
+                        return false;
+                    }
+
+                    if ($('#{{componentId}}-{{sectionId}}-trajectory_percent').val() === '') {
+                        paginatedPNotify('error', {
+                            text : 'Please provide trajectory percentage'
+                        });
+
+                        return false;
+                    }
+
+                    if ($('#{{componentId}}-{{sectionId}}-trajectory_max_invest_amount').val() === '') {
+                        paginatedPNotify('error', {
+                            text : 'Please provide trajectory max invest amount'
+                        });
+
+                        return false;
+                    }
+
+                    if ($('#{{componentId}}-{{sectionId}}-trajectory_invest_amount').val() === '') {
+                        paginatedPNotify('error', {
+                            text : 'Please provide trajectory invest amount'
+                        });
+
+                        return false;
+                    }
+
+                    var postData = { };
+                    postData[$('#security-token').attr('name')] = $('#security-token').val();
+                    postData['portfolio_id'] = $('#{{componentId}}-{{sectionId}}-id').val();
+                    postData['strategy_id'] = $('#{{componentId}}-{{sectionId}}-strategies').val();
+                    postData['amc_id'] = $('#{{componentId}}-{{sectionId}}-amc_id').val();
+                    if (dataCollectionSectionForm['vars']['source'] === 'current') {
+                        postData['scheme_id'] = $('#{{componentId}}-{{sectionId}}-sell_transaction_id').val();
+                    } else {
+                        postData['scheme_id'] = $('#{{componentId}}-{{sectionId}}-scheme_id').val();
+                    }
+
+                    postData['trajectory'] = $('#{{componentId}}-{{sectionId}}-trajectory').find('input[type=radio]:checked').data('value');
+                    postData['transaction_type'] = $('#{{componentId}}-{{sectionId}}-transaction_type').find('input[type=radio]:checked').data('value');
+                    postData['consecutive_days'] = $('#{{componentId}}-{{sectionId}}-consecutive_days').val();
+                    postData['trajectory_percent'] = $('#{{componentId}}-{{sectionId}}-trajectory_percent').val();
+                    postData['trajectory_max_invest_amount'] = $('#{{componentId}}-{{sectionId}}-trajectory_max_invest_amount').val();
+                    postData['trajectory_invest_amount'] = $('#{{componentId}}-{{sectionId}}-trajectory_invest_amount').val();
+
+                    postData['startDate'] = dataCollectionSectionForm['vars']['startDate'];
+                    postData['endDate'] = dataCollectionSectionForm['vars']['endDate'];
+                    postData['carry_forward_to_next_schedule'] = false;
+
+                    if ($('#{{componentId}}-{{sectionId}}-carry_forward_to_next_schedule').find('input[type=radio]:checked').data('value') === 'carry_forward_to_next_schedule_yes') {
+                        postData['carry_forward_to_next_schedule'] = true;
+                    }
+
+                    postData['schedule'] = dataCollectionSectionForm['vars']['schedule'];
+                    if (dataCollectionSectionForm['vars']['schedule'] === 'weekly') {
+                        postData['weekly_days'] = $('#{{componentId}}-{{sectionId}}-weekly_days').val();
+                    } else if (dataCollectionSectionForm['vars']['schedule'] === 'monthly') {
+                        postData['monthly_months'] = $('#{{componentId}}-{{sectionId}}-monthly_months').val();
+                        postData['monthly_day'] = $('#{{componentId}}-{{sectionId}}-monthly_day').val();
+                    }
+
+                    return postData;
+                };
+
+                dataCollectionSectionForm['funcs']['getStrategiesTransactions'] = function() {
+                    var postData = dataCollectionSectionForm['vars']['strategyPostData']();
+
+                    if (!postData) {
+                        return false;
+                    }
+
+                    $.post('{{links.url("etf/portfolios/getStrategiesTransactions")}}', postData, function(response) {
+                        if (response.tokenKey && response.token) {
+                            $("#security-token").attr("name", response.tokenKey);
+                            $("#security-token").val(response.token);
+                        }
+
+                        if (response.responseCode === 0) {
+                            if (response.responseData) {
+                                $('#{{componentId}}-{{sectionId}}-strategies_total_buy_transactions').empty().html('0');
+                                $('#{{componentId}}-{{sectionId}}-strategies_total_sell_transactions').empty().html('0');
+                                $('#{{componentId}}-{{sectionId}}-strategies_first_transaction_date').empty().html('-');
+                                $('#{{componentId}}-{{sectionId}}-strategies_last_transaction_date').empty().html('-');
+
+                                if (response.responseData.total_transactions_count.buy) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_total_buy_transactions').empty().html(response.responseData.total_transactions_count.buy);
+                                }
+                                if (response.responseData.total_transactions_count.sell) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_total_sell_transactions').empty().html(response.responseData.total_transactions_count.sell);
+                                }
+                                if (response.responseData.total_transactions_amount) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_total_transactions_amount').empty().html(dataCollectionSectionForm['vars']['currencySymbol'] + response.responseData.total_transactions_amount);
+                                }
+                                if (response.responseData.first_date) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_first_transaction_date').empty().html(response.responseData.first_date);
+                                }
+                                if (response.responseData.last_date) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_last_transaction_date').empty().html(response.responseData.last_date);
+                                }
+                                if (response.responseData.transactions) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies-transactions-table tbody').empty();
+                                    var transactions = [];
+
+                                    for (var transaction in response.responseData.transactions) {
+                                        var newTransaction = [];
+
+                                        newTransaction.push(response.responseData.transactions[transaction]['type'].toUpperCase());
+                                        newTransaction.push(response.responseData.transactions[transaction]['date']);
+                                        newTransaction.push(response.responseData.transactions[transaction]['units']);
+                                        newTransaction.push(response.responseData.transactions[transaction]['amount']);
+
+                                        transactions.push(newTransaction);
+                                    }
+
+                                    dataCollectionSectionForm['vars']['strategiesTransactionsTable'].rows().clear().draw();
+                                    dataCollectionSectionForm['vars']['strategiesTransactionsTable'].rows.add(transactions).draw();
+                                    $('#{{componentId}}-{{sectionId}}-strategies-transactions-modal').modal('show');
+                                    $('#{{componentId}}-{{sectionId}}-strategies-transactions-modal').on('hide.bs.modal', function (e) {
+                                        $('#{{componentId}}-{{sectionId}}-strategies-transactions-table tbody').empty();
+                                    });
+                                }
+                            }
+                        } else {
+                            paginatedPNotify('error', {
+                                text : response.responseMessage
+                            });
+                        }
+                    }, 'json');
+                }
+
+                if ($.fn.DataTable && !$.fn.DataTable.isDataTable('#{{componentId}}-{{sectionId}}-rpt-transactions-table')) {
+                    var transactionColumns =
+                        [
+                            {orderable: false},
+                            {orderable: false},
+                            {orderable: false},
+                            {orderable: false},
+                            {orderable: false},
+                            {orderable: false},
+                            {orderable: false}
+                        ];
+
+                    dataCollectionSectionForm['vars']['rptStrategiesTransactionsTable'] = $('#{{componentId}}-{{sectionId}}-rpt-transactions-table').DataTable({
+                        columns: transactionColumns,
+                        order: false,
+                        lengthMenu: [
+                            [20, 50, 100, -1],
+                            [20, 50, 100, 'All']
+                        ],
+                    });
+                }
+            }
+        },
+        '{{componentId}}-{{sectionId}}-return_percentage_threshold'             : { },
+        '{{componentId}}-{{sectionId}}-start_after_x_days'                      : { },
+        '{{componentId}}-{{sectionId}}-end-date'                                : {
+            dateFormat          : "Y-m-d",
+            altFormat           : "d-m-Y",
+            allowInput          : true,
+            static              : true,
+            minDate             : "2000-01-01",
+            maxDate             : "today",
+            onChange: function(selectedDates, dateStr, instance) {
+                if (dateStr !== '') {
+                    dataCollectionSectionForm['vars']['endDate'] = dateStr;
+                } else {
+                    dataCollectionSectionForm['vars']['endDate'] = null;
+                }
+            },
+            disable: [
+                function(date) {
+                    // return true to disable
+                    return (date.getDay() === 0 || date.getDay() === 6);
+                }
+            ],
+            locale: {
+                "firstDayOfWeek": 1 // start week on Monday
+            }
+        },
+        '{{componentId}}-{{sectionId}}-form'                                    : {
+            ignore      : ':submit, :reset, :image, :hidden, .ignore, .cr-slider',
+            rules: {
+            },
+            messages: {
+            }
+        }
+    });
+</script>

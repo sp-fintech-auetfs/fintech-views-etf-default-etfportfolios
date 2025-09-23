@@ -1,0 +1,65 @@
+{% if portfolio['id'] is defined %}
+    {% set portfolioId = portfolio['id'] %}
+    {% set title = 'Portfolio (' ~ portfolio['name'] ~ ')' %}
+{% else %}
+    {% set portfolioId = '' %}
+    {% set title = 'New Portfolio' %}
+{% endif %}
+{% set cardType = 'primary' %}
+{% if mode == 'edit' %}
+    {% set formButtons =
+        [
+            'updateButtonId'                : portfolioId,
+            'addActionUrl'                  : 'etf/portfolios/add',
+            'addSuccessRedirectUrl'         : 'etf/portfolios',
+            'updateActionUrl'               : 'etf/portfolios/update',
+            'updateSuccessRedirectUrl'      : 'etf/portfolios',
+            'cancelActionUrl'               : 'etf/portfolios',
+            'closeActionUrl'                : 'etf/portfolios'
+        ]
+    %}
+{% elseif mode == 'transact' or mode == 'timeline' or mode == 'strategies' %}
+    {% if mode == 'transact' %}
+        {% set title = title ~ ' - Transact mode' %}
+    {% endif %}
+    {% if mode == 'timeline' %}
+        {% set title = title ~ ' - Timeline mode' %}
+        {% if timelineNeedsGeneration is defined and timelineNeedsGeneration == true %}
+            {% set title = title ~ ' - Recalculation from : ' %}
+            {% if portfolio['timeline']['recalculate_from_date'] %}
+                {% set title = title ~ portfolio['timeline']['recalculate_from_date'] %}
+            {% else  %}
+                {% set title = title ~ portfolio['start_date'] %}
+            {% endif %}
+        {% endif %}
+        {% set cardType = 'info' %}
+    {% endif %}
+    {% if mode == 'strategies' %}
+        {% set title = title ~ ' - Strategy mode' %}
+        {% set cardType = 'cyan' %}
+    {% endif %}
+    {% set formButtons =
+        [
+            'updateButtonId'                : portfolioId,
+            'closeActionUrl'                : 'etf/portfolios'
+        ]
+    %}
+{% endif %}
+{{adminltetags.useTag('content',
+    [
+        'component'                     : component,
+        'componentName'                 : componentName,
+        'componentId'                   : componentId,
+        'parentComponentId'             : parent,
+        'sectionId'                     : 'main',
+        'contentType'                   : 'sectionWithForm',
+        'cardHeader'                    : true,
+        'cardFooter'                    : true,
+        'cardType'                      : cardType,
+        'cardIcon'                      : 'address-book',
+        'cardTitle'                     : title,
+        'cardAdditionalClass'           : 'rounded-0',
+        'cardBodyInclude'               : 'portfolios/form',
+        'formButtons'                   : formButtons
+    ]
+)}}

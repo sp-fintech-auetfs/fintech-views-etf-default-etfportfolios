@@ -1,0 +1,713 @@
+<!-- htmlhint tag-pair:false --><!-- htmlmin:ignore -->
+{% set timelineButtons = [] %}
+{% if portfolioPerformancesChunks is defined and portfolioPerformancesChunks != false %}
+    {% if portfolioPerformancesChunks['week'] is defined and portfolioPerformancesChunks['week']|length > 0 %}
+        {% set timelineButtons = array_merge(timelineButtons,
+            [
+                'week' : [
+                    'title'                   : '1W',
+                    'type'                    : 'primary',
+                    'value'                   : 'week',
+                    'disabled'                : true
+                ]
+            ]
+        ) %}
+    {% endif %}
+    {% if portfolioPerformancesChunks['month'] is defined and portfolioPerformancesChunks['month']|length > 0 %}
+        {% set timelineButtons = array_merge(timelineButtons,
+            [
+                'month' : [
+                    'title'                   : '1M',
+                    'type'                    : 'primary',
+                    'value'                   : 'month'
+                ]
+            ]
+        ) %}
+    {% endif %}
+    {% if portfolioPerformancesChunks['threeMonth'] is defined and portfolioPerformancesChunks['threeMonth']|length > 0 %}
+        {% set timelineButtons = array_merge(timelineButtons,
+            [
+                'threeMonth' : [
+                    'title'                   : '3M',
+                    'type'                    : 'primary',
+                    'value'                   : 'threeMonth'
+                ]
+            ]
+        ) %}
+    {% endif %}
+    {% if portfolioPerformancesChunks['sixMonth'] is defined and portfolioPerformancesChunks['sixMonth']|length > 0 %}
+        {% set timelineButtons = array_merge(timelineButtons,
+            [
+                'sixMonth' : [
+                    'title'                   : '6M',
+                    'type'                    : 'primary',
+                    'value'                   : 'sixMonth'
+                ]
+            ]
+        ) %}
+    {% endif %}
+    {% if portfolioPerformancesChunks['year'] is defined and portfolioPerformancesChunks['year']|length > 0 %}
+        {% set timelineButtons = array_merge(timelineButtons,
+            [
+                'year' : [
+                    'title'                   : '1Y',
+                    'type'                    : 'primary',
+                    'value'                   : 'year'
+                ]
+            ]
+        ) %}
+    {% endif %}
+    {% if portfolioPerformancesChunks['threeYear'] is defined and portfolioPerformancesChunks['threeYear'] == true %}
+        {% set timelineButtons = array_merge(timelineButtons,
+            [
+                'threeYear' : [
+                    'title'                   : '3Y',
+                    'type'                    : 'primary',
+                    'value'                   : 'threeYear'
+                ]
+            ]
+        ) %}
+    {% endif %}
+    {% if portfolioPerformancesChunks['fiveYear'] is defined and portfolioPerformancesChunks['fiveYear'] == true %}
+        {% set timelineButtons = array_merge(timelineButtons,
+            [
+                'fiveYear' : [
+                    'title'                   : '5Y',
+                    'type'                    : 'primary',
+                    'value'                   : 'fiveYear'
+                ]
+            ]
+        ) %}
+    {% endif %}
+    {% if portfolioPerformancesChunks['tenYear'] is defined and portfolioPerformancesChunks['tenYear'] == true %}
+        {% set timelineButtons = array_merge(timelineButtons,
+            [
+                'tenYear' : [
+                    'title'                   : '10Y',
+                    'type'                    : 'primary',
+                    'value'                   : 'tenYear'
+                ]
+            ]
+        ) %}
+    {% endif %}
+    {% set timelineButtons = array_merge(timelineButtons,
+        [
+            'all' : [
+                'title'                   : 'ALL',
+                'type'                    : 'primary',
+                'value'                   : 'all'
+            ],
+            'range' : [
+                'title'                   : 'RANGE',
+                'type'                    : 'primary',
+                'value'                   : 'range'
+            ]
+        ]
+    ) %}
+    <div class="row">
+        <div id="timeline-buttons" class="col text-center" hidden>
+            {{adminltetags.useTag('buttons',
+                [
+                    'component'                         : component,
+                    'componentName'                     : componentName,
+                    'componentId'                       : componentId,
+                    'sectionId'                         : sectionId,
+                    'buttonType'                        : 'ButtonGroup',
+                    'buttonId'                          : 'timeline',
+                    'groupButtonType'                   : 'radio',
+                    'groupRadioButtonChecked'           : 'week',
+                    'buttons'                           : timelineButtons
+                ]
+            )}}
+        </div>
+        <div class="col">
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'date_range',
+                    'fieldLabel'                     : false,
+                    'fieldPlaceholder'               : 'Date Range',
+                    'fieldType'                      : 'flatpickr',
+                    'fieldFlatpickrClearButton'      : true,
+                    'fieldHelp'                      : true,
+                    'fieldHelpTooltipContent'        : 'Date Range',
+                    'fieldRequired'                  : true,
+                    'fieldHidden'                    : true,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnCreate'           : false,
+                    'fieldBazPostOnUpdate'           : true,
+                    'fieldValue'                     : ''
+                ]
+            )}}
+        </div>
+        <div id="charttype-select" class="col" hidden>
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'charttype_select',
+                    'fieldLabel'                     : false,
+                    'fieldType'                      : 'select2',
+                    'fieldHelp'                      : false,
+                    'fieldHelpTooltipContent'        : 'Select chart type',
+                    'fieldRequired'                  : true,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnCreate'           : false,
+                    'fieldBazPostOnUpdate'           : false,
+                    'fieldDataSelect2Options'        :
+                        [
+                            'invested_return'                   : [
+                                'id'                            : 'invested_return',
+                                'name'                          : 'PORTFOLIO INVESTED vs RETURN (' ~ currencySymbol ~ ')'
+                            ],
+                            'profit_loss'                       : [
+                                'id'                            : 'profit_loss',
+                                'name'                          : 'PORTFOLIO PROFIT LOSS (' ~ currencySymbol ~ ')'
+                            ],
+                            'return_percent'                    : [
+                                'id'                            : 'return_percent',
+                                'name'                          : 'PORTFOLIO RETURN (%)'
+                            ],
+                            'xirr'                              : [
+                                'id'                            : 'xirr',
+                                'name'                          : 'PORTFOLIO XIRR (%)'
+                            ],
+                            'investments_return_amount'         : [
+                                'id'                            : 'investments_return_amount',
+                                'name'                          : 'INVESTMENTS RETURN (' ~ currencySymbol ~ ')'
+                            ],
+                            'investments_diff'                  : [
+                                'id'                            : 'investments_diff',
+                                'name'                          : 'INVESTMENTS PROFIT LOSS (' ~ currencySymbol ~ ')'
+                            ],
+                            'investments_xirr'                  : [
+                                'id'                            : 'investments_xirr',
+                                'name'                          : 'INVESTMENTS XIRR (%)'
+                            ]
+                        ],
+                    'fieldDataSelect2OptionsKey'     : 'id',
+                    'fieldDataSelect2OptionsValue'   : 'name',
+                    'fieldDataSelect2OptionsArray'   : true,
+                    'fieldDataSelect2OptionsSelected': 'invested_return'
+                ]
+            )}}
+        </div>
+    </div>
+    <div class="row" id="timeline-chart" hidden>
+        <div class="col">
+            <div id="performancesChart"></div>
+        </div>
+    </div>
+    <div class="row text-center" id="timeline-loader">
+        <div class="col">
+            <i class="fa fa-cog fa-spin"></i> Loading chart...
+        </div>
+    </div>
+{% else %}
+<div class="row text-center m-2" id="{{componentId}}-{{sectionId}}-notimeline">
+    <div class="col">
+        <h6><i class="fa fa-fw fa-info-circle text-info"></i> Charts are only available after timeline is generated.</h6>
+    </div>
+</div>
+{% endif %}
+<hr>
+{% set portfolioPerformancesChunks = escaper.js(json_encode(portfolioPerformancesChunks, 16)) %}
+{% set portfolioInvestments = escaper.js(json_encode(portfolioInvestments, 16)) %}
+<script>
+/*global paginatedPNotify BazProgress BazContentFields BazHelpers BazContentLoader Pace BazCore dataCollection echarts dayjs_plugin_minMax dayjs */
+var dataCollectionComponent, dataCollectionSection, dataCollectionSectionForm;
+if (!window['dataCollection']) {
+    window['dataCollection'] = { };
+}
+if (!window['dataCollection']['{{componentId}}']) {
+    dataCollectionComponent =
+        window['dataCollection']['{{componentId}}'] = { };
+} else {
+    dataCollectionComponent =
+        window['dataCollection']['{{componentId}}'];
+}
+if (!dataCollectionComponent['{{componentId}}-{{sectionId}}']) {
+    dataCollectionSection =
+        dataCollectionComponent['{{componentId}}-{{sectionId}}'] = { };
+} else {
+    dataCollectionSection =
+        dataCollectionComponent['{{componentId}}-{{sectionId}}'];
+}
+if (!dataCollectionSection['{{componentId}}-{{sectionId}}-form']) {
+    dataCollectionSectionForm =
+        dataCollectionSection['{{componentId}}-{{sectionId}}-form'] = { };
+} else {
+    dataCollectionSectionForm =
+        dataCollectionSection['{{componentId}}-{{sectionId}}-form'];
+}
+
+if (!dataCollectionSectionForm['vars']) {
+    dataCollectionSectionForm['vars'] = { };
+}
+if (!dataCollectionSectionForm['funcs']) {
+    dataCollectionSectionForm['funcs'] = { };
+}
+
+dataCollectionSectionForm['vars']['chartType'] = 'invested_return';
+dataCollectionSectionForm['vars']['chartTypeName'] = 'INVESTED vs RETURN';
+dataCollectionSectionForm['vars']['portfolioPerformancesChunks'] = JSON.parse('{{portfolioPerformancesChunks}}');
+dataCollectionSectionForm['vars']['portfolioInvestments'] = JSON.parse('{{portfolioInvestments}}');
+
+dataCollectionSectionForm['vars']['actions'] = { };
+dataCollectionSectionForm['vars']['performancesChart'] = { };
+
+dataCollectionSectionForm['vars']['timeline'] = 'week';
+
+dataCollectionSectionForm['vars']['portfolioOrders'] = [];
+
+dataCollectionSectionForm['funcs']['initPerformancesChart'] = function() {
+    if (!dataCollectionSectionForm['vars']['portfolioPerformancesChunks']) {
+        return false;
+    }
+
+    if (Object.keys(dataCollectionSectionForm['vars']['performancesChart']).length === 0) {
+        dataCollectionSectionForm['vars']['performancesChart'] = echarts.init(document.getElementById('performancesChart'), 'macarons');
+    }
+
+    dataCollectionSectionForm['vars']['performancesChartOptions'] = {
+        title: {
+            text: 'Performance for ' + dataCollectionSectionForm['vars']['portfolio']['name'],
+            left: 'left'
+        },
+        tooltip: {
+            trigger: 'axis',
+            formatter: function(params) {
+                let html = `<div class="row"><div class="col">${params[0].name}</div></div>`;
+                html += '<div class="row"><div class="col">';
+                params.forEach(item => {
+                    if (item.seriesType === 'line') {
+                        html += `<div class="row"><div class="col">${item.marker} ${item.seriesName}</div><div class="col text-right">${item.value}</div></div>`;
+                    }
+                });
+                html += '</div></div><br>';
+
+                if (dataCollectionSectionForm['vars']['portfolioOrders'][params[0].dataIndex]['orders']) {
+                    html += `<div class="row"><div class="col">ORDERS</div></div>`;
+                    $.each(dataCollectionSectionForm['vars']['portfolioOrders'][params[0].dataIndex]['orders'], function(index, order) {
+                        html += `<div class="row"><div class="col">${order.scheme_id}</div><div class="col">${order.type.toUpperCase()}</div><div class="col text-right">${order.amount}</div></div>`;
+                    });
+                    html += '</div></div>';
+                }
+
+                return html;
+            },
+            axisPointer: {
+                type: 'cross'
+            }
+        },
+        legend: {
+            top: 50,
+            center: 'center'
+        },
+        grid: {
+            top: 80,
+        },
+        xAxis: {
+            name: 'PERIOD (WEEK)',
+            nameLocation: 'middle',
+            nameTextStyle: {
+                lineHeight: 50
+            },
+            data: []
+        },
+        yAxis: {
+            name: 'INVESTED vs RETURN',
+            nameRotate: 90,
+            nameLocation: "middle",
+            nameTextStyle: {
+                lineHeight: 150,
+            }
+        },
+        dataZoom: [
+            {
+                type: 'inside'
+            }
+        ],
+        series: [
+            {
+                name: 'INVESTED vs RETURN',
+                type: 'line',
+                data: [],
+            }
+        ]
+    }
+
+    dataCollectionSectionForm['vars']['performancesChart'].off('rendered');
+    dataCollectionSectionForm['vars']['performancesChart'].on('rendered', function() {
+        if (dataCollectionSectionForm['vars'] &&
+            dataCollectionSectionForm['vars']['performancesChart']
+        ) {
+            if ($('#timeline-chart').width() > 0) {
+                dataCollectionSectionForm['vars']['performancesChart'].resize({
+                    width : $('#timeline-chart').width(),
+                    height: 400
+                });
+            }
+        }
+
+        $('#timeline-buttons').attr('hidden', false);
+        $('#charttype-select').attr('hidden', false);
+        $('#timeline-loader').attr('hidden', true);
+        $('#timeline-chart').attr('hidden', false);
+    });
+
+    if (Object.keys(dataCollectionSectionForm['vars']['portfolioPerformancesChunks']).length > 0) {
+        dataCollectionSectionForm['vars']['performancesChartOptions']['series'] = [];
+        dataCollectionSectionForm['vars']['timeline'] = 'week';
+
+        $.each(['week', 'month', 'threeMonth', 'sixMonth', 'year', 'threeYear', 'fiveYear', 'tenYear', 'all', 'range'], function(index, time) {
+            if (!dataCollectionSectionForm['vars']['actions'][time]) {
+                dataCollectionSectionForm['vars']['actions'][time] = function() {
+                    dataCollectionSectionForm['vars']['performancesChart'].setOption({series: []}, {replaceMerge: ['series']});
+
+                    dataCollectionSectionForm['vars']['portfolioOrders'] = [];
+
+                    if (time === 'range') {
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['xAxis']['name'] = 'PERIOD RANGE (' + dataCollectionSectionForm['vars']['range'] + ')';
+                    } else {
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['xAxis']['name'] = 'PERIOD (' + time.toUpperCase() + ')';
+                    }
+
+                    dataCollectionSectionForm['vars']['performancesChartOptions']['yAxis']['name'] = dataCollectionSectionForm['vars']['chartTypeName'];
+                    dataCollectionSectionForm['vars']['performancesChartOptions']['xAxis']['data'] = [];
+
+                    dataCollectionSectionForm['vars'][time + 'Data'] = [];
+
+                    for (var date in dataCollectionSectionForm['vars']['portfolioPerformancesChunks'][time]) {
+                        dataCollectionSectionForm['vars'][time + 'ChunkData'] = { };
+                        dataCollectionSectionForm['vars'][time + 'ChunkData']['date'] = date;
+
+                        dataCollectionSectionForm['vars'][time + 'ChunkData'] =
+                            dataCollectionSectionForm['vars']['portfolioPerformancesChunks'][time][date];
+
+                        dataCollectionSectionForm['vars'][time + 'Data'].push(dataCollectionSectionForm['vars'][time + 'ChunkData']);
+
+                        if (dataCollectionSectionForm['vars']['portfolioPerformancesChunks'][time][date]['orders']) {
+                            dataCollectionSectionForm['vars']['portfolioOrders'].push({'orders': dataCollectionSectionForm['vars']['portfolioPerformancesChunks'][time][date]['orders']});
+                        } else {
+                            dataCollectionSectionForm['vars']['portfolioOrders'].push({});
+                        }
+                    }
+
+                    delete(dataCollectionSectionForm['vars']['performancesChartOptions']['series']);
+
+                    dataCollectionSectionForm['vars']['performancesChartOptions']['series'] = [];
+
+                    if (dataCollectionSectionForm['vars']['chartType'] === 'invested_return') {
+                        $.each([{'name':'INVESTED','data':'invested_amount'},{'name':'RETURN','data':'return_amount'}], function(index, chartLine) {
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index] = { };
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['type'] = 'line';
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['name'] = chartLine.name;
+
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['data'] =
+                                dataCollectionSectionForm['vars'][time + 'Data'].map(row => row[chartLine.data]);
+
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['symbol'] =
+                                function (data, params) {
+                                    if (dataCollectionSectionForm['vars']['portfolioOrders'][params.dataIndex]['orders']) {
+                                        return 'diamond';
+                                    }
+
+                                    return 'emptyCircle';
+                                };
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['symbolSize'] =
+                                function (data, params) {
+                                    if (dataCollectionSectionForm['vars']['portfolioOrders'][params.dataIndex]['orders']) {
+                                        return 10;
+                                    }
+
+                                    return 4;
+                                };
+                        });
+                    } else if (dataCollectionSectionForm['vars']['chartType'] === 'investments_return_amount' ||
+                               dataCollectionSectionForm['vars']['chartType'] === 'investments_diff' ||
+                               dataCollectionSectionForm['vars']['chartType'] === 'investments_xirr'
+                    ) {
+                        var dataType;
+
+                        if (dataCollectionSectionForm['vars']['chartType'] === 'investments_return_amount') {
+                            dataType = 'return_amount';
+                        } else if (dataCollectionSectionForm['vars']['chartType'] === 'investments_diff') {
+                            dataType = 'diff';
+                        } else if (dataCollectionSectionForm['vars']['chartType'] === 'investments_xirr') {
+                            dataType = 'xirr';
+                        }
+
+                        $.each(dataCollectionSectionForm['vars']['portfolioInvestments'], function(index, schemeName) {
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index] = { };
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['type'] = 'line';
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['name'] = schemeName;
+
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['data'] =
+                                dataCollectionSectionForm['vars'][time + 'Data'].map(row => row['investments'][index][dataType]);
+
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['symbol'] =
+                                function (data, params) {
+                                    if (dataCollectionSectionForm['vars']['portfolioOrders'][params.dataIndex]['orders']) {
+                                        return 'diamond';
+                                    }
+
+                                    return 'emptyCircle';
+                                };
+                            dataCollectionSectionForm['vars']['performancesChartOptions']['series'][index]['symbolSize'] =
+                                function (data, params) {
+                                    if (dataCollectionSectionForm['vars']['portfolioOrders'][params.dataIndex]['orders']) {
+                                        return 10;
+                                    }
+
+                                    return 4;
+                                };
+                        });
+                    } else {
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['series'][0] = { };
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['series'][0]['type'] = 'line';
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['series'][0]['name'] = dataCollectionSectionForm['vars']['chartTypeName'];
+
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['series'][0]['data'] =
+                            dataCollectionSectionForm['vars'][time + 'Data'].map(row => row[dataCollectionSectionForm['vars']['chartType']]);
+
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['series'][0]['symbol'] =
+                            function (data, params) {
+                                if (dataCollectionSectionForm['vars']['portfolioOrders'][params.dataIndex]['orders']) {
+                                    return 'diamond';
+                                }
+
+                                return 'emptyCircle';
+                            };
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['series'][0]['symbolSize'] =
+                            function (data, params) {
+                                if (dataCollectionSectionForm['vars']['portfolioOrders'][params.dataIndex]['orders']) {
+                                    return 10;
+                                }
+
+                                return 4;
+                            };
+                    }
+
+                    if (dataCollectionSectionForm['vars']['performancesChartOptions']['xAxis']['data'].length === 0) {
+                        dataCollectionSectionForm['vars']['performancesChartOptions']['xAxis']['data'] = dataCollectionSectionForm['vars'][time + 'Data'].map(row => row.date);
+                    }
+
+                    dataCollectionSectionForm['vars']['performancesChart'].setOption(dataCollectionSectionForm['vars']['performancesChartOptions']);
+                }
+            }
+        });
+
+        dataCollectionSectionForm['vars']['actions']['week']();
+
+        //Activate Timeline buttons
+        var timelineChecked = $("input[type='radio'][name='timeline']:checked");
+        var timelineTimeline = $(timelineChecked).data('value');
+        var timelineLabels = $(timelineChecked).parents('.btn-group').children('label');
+        $(timelineLabels).each(function(index, timelineLabel) {
+            $(timelineLabel).removeClass('focus active disabled');
+            $(timelineLabel).css('cursor', 'pointer');
+
+            if ($(timelineLabel).children('input')[0].id === timelineTimeline) {
+                $(timelineLabel).addClass('focus active disabled');
+                $(timelineLabel).css('cursor', 'default');
+            }
+        });
+
+        $("input[type='radio'][name='timeline']:checked").parents('.btn-group').children('label').children('input').off();
+        $("input[type='radio'][name='timeline']:checked").parents('.btn-group').children('label').children('input').click(function() {
+            $('#{{componentId}}-{{sectionId}}-date_range').parents('.form-group').addClass('d-none');
+            dataCollectionSectionForm['vars']['rangeActive'] = false;
+            dataCollectionSectionForm['vars']['range'] = null;
+            dataCollectionSection['{{componentId}}-{{sectionId}}-date_range']['flatpickr'].clear();
+
+            timelineChecked = $("input[type='radio'][name='timeline']:checked");
+            timelineTimeline = $(timelineChecked).data('value');
+            timelineLabels = $(timelineChecked).parents('.btn-group').children('label');
+
+            $(timelineLabels).each(function(index, timelineLabel) {
+                $(timelineLabel).removeClass('focus active disabled');
+                $(timelineLabel).css('cursor', 'pointer');
+
+                if ($(timelineLabel).children('input')[0].id === timelineTimeline) {
+                    $(timelineLabel).addClass('focus active disabled');
+                    $(timelineLabel).css('cursor', 'default');
+                }
+            });
+
+            if (timelineTimeline === 'range') {
+                $('#{{componentId}}-{{sectionId}}-date_range').parents('.form-group').removeClass('d-none');
+
+                return;
+            }
+
+            if (timelineTimeline === 'week') {
+                dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+            } else if (timelineTimeline === 'month') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['month'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'threeMonth') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['threeMonth'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'sixMonth') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['sixMonth'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'year') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['year'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'threeYear') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['threeYear'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'fiveYear') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['fiveYear'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'tenYear') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['tenYear'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'all') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['all'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            }
+        });
+
+        //Activate Datatype select
+        $('#{{componentId}}-{{sectionId}}-charttype_select').on('select2:select', function(e) {
+            dataCollectionSectionForm['vars']['chartType'] = e.params.data.id;
+            dataCollectionSectionForm['vars']['chartTypeName'] = e.params.data.text;
+
+            if (dataCollectionSectionForm['vars']['rangeActive'] === true) {
+                dataCollectionSectionForm['vars']['actions']['range']();
+
+                return;
+            }
+
+            $($("input[type='radio'][name='timeline']:checked").parents('.btn-group').children('label')).each(function(index, label) {
+                if ($(label).hasClass('active')) {
+                    timelineTimeline = $(label).children('input').data('value');
+                }
+            });
+
+            if (timelineTimeline === 'week') {
+                dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+            } else if (timelineTimeline === 'month') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['month'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'threeMonth') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['threeMonth'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'sixMonth') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['sixMonth'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'year') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['year'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'threeYear') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['threeYear'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'fiveYear') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['fiveYear'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'tenYear') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['tenYear'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'all') {
+                if (typeof dataCollectionSectionForm['vars']['portfolioPerformancesChunks']['all'] === 'boolean') {
+                    dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'](timelineTimeline);
+                } else {
+                    dataCollectionSectionForm['vars']['actions'][timelineTimeline]();
+                }
+            } else if (timelineTimeline === 'range') {
+                return;
+            }
+        });
+    }
+}
+
+dataCollectionSectionForm['funcs']['getPortfolioPerformancesChunks'] = function(chunksize, range = null) {
+    var postData = { };
+    postData[$('#security-token').attr('name')] = $('#security-token').val();
+    postData['portfolio_id'] = dataCollectionSectionForm['vars']['portfolio']['id'];
+    postData['chunk_size'] = chunksize;
+    if (chunksize === 'range' && range) {
+        range = range.split(' to ');
+        postData['range'] = range;
+    }
+
+    $.post('{{links.url("etf/portfolios/getPortfolioPerformancesChunks")}}', postData, function(response) {
+        if (response.responseCode == 0 && response.responseData.chunks[chunksize]) {
+            if (chunksize === 'all') {
+                dataCollectionSectionForm['vars']['portfolioPerformancesChunks'] = response.responseData.chunks[chunksize];
+            } else {
+                dataCollectionSectionForm['vars']['portfolioPerformancesChunks'][chunksize] = response.responseData.chunks[chunksize];
+            }
+
+            dataCollectionSectionForm['vars']['actions'][chunksize]();
+        } else {
+            paginatedPNotify('error', response.responseMessage);
+        }
+
+        if (response.tokenKey && response.token) {
+            $("#security-token").attr("name", response.tokenKey);
+            $("#security-token").val(response.token);
+        }
+    }, 'json');
+}
+
+setTimeout(function(){
+    $(document).ready(function() {
+        dataCollectionSectionForm['funcs']['initPerformancesChart']();
+    });
+}, 1000);
+
+</script>
+<!-- htmlmin:ignore -->

@@ -1,0 +1,518 @@
+{% set portfolio['investments'] = [] %}
+{% include 'portfolios/strategies/common/investmentsource' with ['portfolio' : portfolio] %}
+<hr>
+<div class="row">
+    {% include 'portfolios/strategies/common/startenddates.html' %}
+    <div class="col">
+        {{adminltetags.useTag('fields',
+            [
+                'component'                      : component,
+                'componentName'                  : componentName,
+                'componentId'                    : componentId,
+                'sectionId'                      : sectionId,
+                'fieldId'                        : 'amount',
+                'fieldLabel'                     : 'Invest Amount',
+                'fieldType'                      : 'input',
+                'fieldGroupPreAddonText'         : currencySymbol,
+                'fieldInputTypeTextFilter'       : 'positiveCurrency',
+                'fieldHelp'                      : true,
+                'fieldHelpTooltipContent'        : 'Investment Amount',
+                'fieldRequired'                  : true,
+                'fieldBazScan'                   : true,
+                'fieldBazPostOnCreate'           : false,
+                'fieldBazPostOnUpdate'           : false,
+                'fieldValue'                     : ''
+            ]
+        )}}
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col">
+        {{adminltetags.useTag('fields',
+            [
+                'component'                      : component,
+                'componentName'                  : componentName,
+                'componentId'                    : componentId,
+                'sectionId'                      : sectionId,
+                'fieldId'                        : 'trajectory',
+                'fieldLabel'                     : 'Trajectory buy',
+                'fieldType'                      : 'radio',
+                'fieldHelp'                      : true,
+                'fieldHelpTooltipContent'        : 'Buy amount when trajectory of the scheme is either going up/down. Transaction hit by trajectory is places between scheduled SIP transactions.',
+                'fieldRequired'                  : false,
+                'fieldBazPostOnCreate'           : true,
+                'fieldBazPostOnUpdate'           : true,
+                'fieldBazScan'                   : true,
+                'fieldRadioButtons'              :
+                    [
+                        'no' :
+                            [
+                                'title'          : 'No',
+                                'type'           : 'secondary',
+                                'dataValue'      : 'no'
+                            ],
+                        'up' :
+                            [
+                                'title'          : 'Up',
+                                'type'           : 'info',
+                                'dataValue'      : 'up'
+                            ],
+                        'down' :
+                            [
+                                'title'          : 'Down',
+                                'type'           : 'info',
+                                'dataValue'      : 'down'
+                            ]
+                    ],
+                'fieldRadioChecked'              : 'no'
+            ]
+        )}}
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'consecutive_days',
+                        'fieldLabel'                     : 'Consecutive days to monitor',
+                        'fieldType'                      : 'input',
+                        'fieldInputTypeTextFilter'       : 'positiveIntMax',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Consecutive days to monitor trajectory before creating transaction. 0 will buy the same day.',
+                        'fieldRequired'                  : true,
+                        'fieldDisabled'                  : true,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : false,
+                        'fieldDataInputMaxNumber'        : 4,
+                        'fieldValue'                     : '0'
+                    ]
+                )}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'trajectory_percent',
+                        'fieldLabel'                     : 'Percentage',
+                        'fieldType'                      : 'input',
+                        'fieldGroupPreAddonText'         : '%',
+                        'fieldInputTypeTextFilter'       : 'positiveFloat',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Percentage to reach from first day of monitoring. Example: if you set it to 1% and tell the system to monitor for x days, the system will wait for the difference to reach the requested percent.',
+                        'fieldRequired'                  : true,
+                        'fieldDisabled'                  : true,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : false,
+                        'fieldValue'                     : '0'
+                    ]
+                )}}
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'trajectory_max_invest_amount',
+                        'fieldLabel'                     : 'Max Investment Amount',
+                        'fieldType'                      : 'input',
+                        'fieldGroupPreAddonText'         : currencySymbol,
+                        'fieldInputTypeTextFilter'       : 'positiveCurrency',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Max Trajectory Investment Amount. Example: if set to 1000 and each trajectory invest amount is set to 100, 10 transactions will be created with 100 each (between SIP). if transactions total go beyond 1000, it will be skipped.',
+                        'fieldRequired'                  : true,
+                        'fieldDisabled'                  : true,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : false,
+                        'fieldValue'                     : ''
+                    ]
+                )}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                {{adminltetags.useTag('fields',
+                    [
+                        'component'                      : component,
+                        'componentName'                  : componentName,
+                        'componentId'                    : componentId,
+                        'sectionId'                      : sectionId,
+                        'fieldId'                        : 'trajectory_invest_amount',
+                        'fieldLabel'                     : 'Investment Amount',
+                        'fieldType'                      : 'input',
+                        'fieldGroupPreAddonText'         : currencySymbol,
+                        'fieldInputTypeTextFilter'       : 'positiveCurrency',
+                        'fieldHelp'                      : true,
+                        'fieldHelpTooltipContent'        : 'Trajectory Investment Amount.',
+                        'fieldRequired'                  : true,
+                        'fieldDisabled'                  : true,
+                        'fieldBazScan'                   : true,
+                        'fieldBazPostOnCreate'           : false,
+                        'fieldBazPostOnUpdate'           : false,
+                        'fieldValue'                     : ''
+                    ]
+                )}}
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+{% include 'portfolios/strategies/common/incrementschedule.html' %}
+<hr>
+{% include 'portfolios/strategies/common/schedule.html' %}
+<hr>
+<script>
+/* globals paginatedPNotify Swal */
+var dataCollectionComponent, dataCollectionSection, dataCollectionSectionForm;
+
+if (!window['dataCollection']['{{componentId}}']) {
+    dataCollectionComponent =
+        window['dataCollection']['{{componentId}}'] = { };
+} else {
+    dataCollectionComponent =
+        window['dataCollection']['{{componentId}}'];
+}
+if (!dataCollectionComponent['{{componentId}}-{{sectionId}}']) {
+    dataCollectionSection =
+        dataCollectionComponent['{{componentId}}-{{sectionId}}'] = { };
+} else {
+    dataCollectionSection =
+        dataCollectionComponent['{{componentId}}-{{sectionId}}'];
+}
+if (!dataCollectionSection['{{componentId}}-{{sectionId}}-form']) {
+    dataCollectionSectionForm =
+        dataCollectionSection['{{componentId}}-{{sectionId}}-form'] = { };
+} else {
+    dataCollectionSectionForm =
+        dataCollectionSection['{{componentId}}-{{sectionId}}-form'];
+}
+
+dataCollectionSection =
+    $.extend(dataCollectionSection, {
+        '{{componentId}}-{{sectionId}}-amount'                                  : {
+            afterInit: function() {
+                dataCollectionSectionForm['vars']['startDate'] = null;
+                dataCollectionSectionForm['vars']['endDate'] = null;
+                dataCollectionSectionForm['vars']['schedule'] = null;
+
+                dataCollectionSectionForm['funcs']['applyStrategy'] = function() {
+                    var postData = dataCollectionSectionForm['vars']['strategyPostData']();
+
+                    if (!postData) {
+                        return false;
+                    }
+
+                    if ($('#{{componentId}}-{{sectionId}}-clone_portfolio')[0].checked) {
+                        postData['clone_portfolio'] = true;
+                        postData['clone_portfolio_name'] = $('#{{componentId}}-{{sectionId}}-clone_portfolio_name').val();
+                    }
+
+                    $.post('{{links.url("etf/portfolios/applyStrategy")}}', postData, function(response) {
+                        if (response.tokenKey && response.token) {
+                            $("#security-token").attr("name", response.tokenKey);
+                            $("#security-token").val(response.token);
+                        }
+
+                        if (response.responseCode === 0) {
+                            $('#strategies-progress').attr('hidden', true);
+                            $('#strategies-buttons').attr('hidden', true);
+                            $('#portfolio-access-buttons').attr('hidden', false);
+                            $('#{{componentId}}-{{sectionId}}-transact-mode, #{{componentId}}-{{sectionId}}-timeline-mode').off();
+                            $('#{{componentId}}-{{sectionId}}-transact-mode, #{{componentId}}-{{sectionId}}-timeline-mode').click(function() {
+                                if ($(this)[0].id === '{{componentId}}-{{sectionId}}-transact-mode') {
+                                    $('#{{componentId}}-{{sectionId}}-portfolios-link')
+                                        .attr(
+                                            'href',
+                                            window['dataCollection'].env.httpScheme + '://' + window['dataCollection'].env.httpHost + '/' + window['dataCollection'].env.appRoute + '/' +
+                                            'etf/portfolios/q/id/' + response.responseData['portfolio_id'] + '/mode/transact'
+                                        );
+                                } else if ($(this)[0].id === '{{componentId}}-{{sectionId}}-timeline-mode') {
+                                    $('#{{componentId}}-{{sectionId}}-portfolios-link')
+                                        .attr(
+                                            'href',
+                                            window['dataCollection'].env.httpScheme + '://' + window['dataCollection'].env.httpHost + '/' + window['dataCollection'].env.appRoute + '/' +
+                                            'etf/portfolios/q/id/' + response.responseData['portfolio_id'] + '/mode/timeline'
+                                        );
+                                }
+
+                                dataCollectionSectionForm['funcs']['browse']();
+                            });
+                        } else {
+                            paginatedPNotify('error', {
+                                text : response.responseMessage
+                            });
+                        }
+                    }, 'json');
+                }
+
+                dataCollectionSectionForm['vars']['strategyPostData'] = function() {
+                    if (dataCollectionSectionForm['vars']['source'] === 'current') {
+                        if ($('#{{componentId}}-{{sectionId}}-sell_transaction_id').val() === '') {
+                            paginatedPNotify('error', {
+                                text : 'Please select investment to withdraw from'
+                            });
+
+                            return false;
+                        }
+                    } else {
+                        if ($('#{{componentId}}-{{sectionId}}-scheme_id').val() === '') {
+                            paginatedPNotify('error', {
+                                text : 'Please select scheme'
+                            });
+
+                            return false;
+                        }
+
+                        if ($('#{{componentId}}-{{sectionId}}-investment_amount').val() === '') {
+                            paginatedPNotify('error', {
+                                text : 'Please enter investment amount'
+                            });
+
+                            return false;
+                        }
+
+                        if ($('#{{componentId}}-{{sectionId}}-investment_date').val() === '') {
+                            paginatedPNotify('error', {
+                                text : 'Please select investment date'
+                            });
+
+                            return false;
+                        }
+                    }
+
+                    if (!dataCollectionSectionForm['vars']['startDate'] || !dataCollectionSectionForm['vars']['endDate']) {
+                        paginatedPNotify('error', {
+                            text : 'Please select start and end date'
+                        });
+
+                        return false;
+                    }
+
+                    if ($('#{{componentId}}-{{sectionId}}-amount').val() === '') {
+                        paginatedPNotify('error', {
+                            text : 'Please enter amount'
+                        });
+
+                        return false;
+                    }
+
+                    if (!dataCollectionSectionForm['vars']['schedule']) {
+                        paginatedPNotify('error', {
+                            text : 'Please select schedule'
+                        });
+
+                        return false;
+                    }
+
+                    if (dataCollectionSectionForm['vars']['schedule'] === 'weekly') {
+                        if ($('#{{componentId}}-{{sectionId}}-weekly_days').val().length === 0) {
+                            paginatedPNotify('error', {
+                                text : 'Please select weekly schedule days'
+                            });
+
+                            return false;
+                        }
+                    }
+
+                    if (dataCollectionSectionForm['vars']['schedule'] === 'monthly') {
+                        if ($('#{{componentId}}-{{sectionId}}-monthly_months').val().length === 0) {
+                            paginatedPNotify('error', {
+                                text : 'Please select monthly schedule months'
+                            });
+
+                            return false;
+                        }
+                        if ($('#{{componentId}}-{{sectionId}}-monthly_day').val() === '') {
+                            paginatedPNotify('error', {
+                                text : 'Please enter monthly schedule day'
+                            });
+
+                            return false;
+                        }
+                    }
+
+                    var postData = { };
+                    postData[$('#security-token').attr('name')] = $('#security-token').val();
+                    postData['portfolio_id'] = $('#{{componentId}}-{{sectionId}}-id').val();
+                    postData['strategy_id'] = $('#{{componentId}}-{{sectionId}}-strategies').val();
+                    postData['amc_id'] = $('#{{componentId}}-{{sectionId}}-amc_id').val();
+                    if (dataCollectionSectionForm['vars']['source'] === 'current') {
+                        postData['scheme_id'] = $('#{{componentId}}-{{sectionId}}-sell_transaction_id').val();
+                    } else {
+                        postData['scheme_id'] = $('#{{componentId}}-{{sectionId}}-scheme_id').val();
+                        postData['investmentAmount'] = $('#{{componentId}}-{{sectionId}}-investment_amount').val();
+                        postData['investmentDate'] = $('#{{componentId}}-{{sectionId}}-investment_date').val();
+                    }
+
+                    postData['amount'] = $('#{{componentId}}-{{sectionId}}-amount').val();
+                    postData['startDate'] = dataCollectionSectionForm['vars']['startDate'];
+                    postData['endDate'] = dataCollectionSectionForm['vars']['endDate'];
+
+                    if (dataCollectionSectionForm['vars']['trajectory'] &&
+                        dataCollectionSectionForm['vars']['trajectory'] !== 'no'
+                    ) {
+                        postData['trajectory'] = dataCollectionSectionForm['vars']['trajectory'];
+                        postData['consecutive_days'] = $('#{{componentId}}-{{sectionId}}-consecutive_days').val();
+                        postData['trajectory_percent'] = $('#{{componentId}}-{{sectionId}}-trajectory_percent').val();
+                        postData['trajectory_max_invest_amount'] = $('#{{componentId}}-{{sectionId}}-trajectory_max_invest_amount').val();
+                        postData['trajectory_invest_amount'] = $('#{{componentId}}-{{sectionId}}-trajectory_invest_amount').val();
+                    }
+
+                    if (dataCollectionSectionForm['vars']['increment-schedule'] &&
+                        dataCollectionSectionForm['vars']['increment-schedule'] !== 'increment-none'
+                    ) {
+                        postData['increment_schedule'] = dataCollectionSectionForm['vars']['increment-schedule'];
+
+                        if ($('#{{componentId}}-{{sectionId}}-increment-value').val() === '') {
+                            paginatedPNotify('error', {
+                                text : 'Please provide increment value'
+                            });
+
+                            return false;
+                        }
+
+                        postData['increment_type'] = dataCollectionSectionForm['vars']['increment-type'];
+                        postData['increment_value'] = $('#{{componentId}}-{{sectionId}}-increment-value').val();
+                    }
+
+                    postData['schedule'] = dataCollectionSectionForm['vars']['schedule'];
+                    if (dataCollectionSectionForm['vars']['schedule'] === 'weekly') {
+                        postData['weekly_days'] = $('#{{componentId}}-{{sectionId}}-weekly_days').val();
+                    } else if (dataCollectionSectionForm['vars']['schedule'] === 'monthly') {
+                        postData['monthly_months'] = $('#{{componentId}}-{{sectionId}}-monthly_months').val();
+                        postData['monthly_day'] = $('#{{componentId}}-{{sectionId}}-monthly_day').val();
+                    }
+
+                    return postData;
+                };
+
+                dataCollectionSectionForm['funcs']['getStrategiesTransactions'] = function() {
+                    var postData = dataCollectionSectionForm['vars']['strategyPostData']();
+
+                    if (!postData) {
+                        return false;
+                    }
+
+                    $.post('{{links.url("etf/portfolios/getStrategiesTransactions")}}', postData, function(response) {
+                        if (response.tokenKey && response.token) {
+                            $("#security-token").attr("name", response.tokenKey);
+                            $("#security-token").val(response.token);
+                        }
+
+                        if (response.responseCode === 0) {
+                            if (response.responseData) {
+                                $('#{{componentId}}-{{sectionId}}-strategies_total_buy_transactions').empty().html('0');
+                                $('#{{componentId}}-{{sectionId}}-strategies_total_sell_transactions').empty().html('0');
+                                $('#{{componentId}}-{{sectionId}}-strategies_first_transaction_date').empty().html('-');
+                                $('#{{componentId}}-{{sectionId}}-strategies_last_transaction_date').empty().html('-');
+
+                                if (response.responseData.total_transactions_count.buy) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_total_buy_transactions').empty().html(response.responseData.total_transactions_count.buy);
+                                }
+                                if (response.responseData.total_transactions_count.sell) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_total_sell_transactions').empty().html(response.responseData.total_transactions_count.sell);
+                                }
+                                if (response.responseData.total_transactions_amount) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_total_transactions_amount').empty().html(dataCollectionSectionForm['vars']['currencySymbol'] + response.responseData.total_transactions_amount);
+                                }
+                                if (response.responseData.first_date) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_first_transaction_date').empty().html(response.responseData.first_date);
+                                }
+                                if (response.responseData.last_date) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies_last_transaction_date').empty().html(response.responseData.last_date);
+                                }
+                                if (response.responseData.transactions) {
+                                    $('#{{componentId}}-{{sectionId}}-strategies-transactions-table tbody').empty();
+                                    var transactions = [];
+
+                                    for (var transaction in response.responseData.transactions) {
+                                        var newTransaction = [];
+
+                                        newTransaction.push(response.responseData.transactions[transaction]['type'].toUpperCase());
+                                        newTransaction.push(response.responseData.transactions[transaction]['date']);
+                                        newTransaction.push(response.responseData.transactions[transaction]['scheme']);
+                                        newTransaction.push(response.responseData.transactions[transaction]['amount']);
+
+                                        transactions.push(newTransaction);
+                                    }
+
+                                    dataCollectionSectionForm['vars']['strategiesTransactionsTable'].rows().clear().draw();
+                                    dataCollectionSectionForm['vars']['strategiesTransactionsTable'].rows.add(transactions).draw();
+                                    $('#{{componentId}}-{{sectionId}}-strategies-transactions-modal').modal('show');
+                                    $('#{{componentId}}-{{sectionId}}-strategies-transactions-modal').on('hide.bs.modal', function (e) {
+                                        $('#{{componentId}}-{{sectionId}}-strategies-transactions-table tbody').empty();
+                                    });
+                                }
+                            }
+                        } else {
+                            paginatedPNotify('error', {
+                                text : response.responseMessage
+                            });
+                        }
+                    }, 'json');
+                }
+            }
+        },
+        '{{componentId}}-{{sectionId}}-trajectory'                              : {
+            afterInit: function() {
+                dataCollectionSectionForm['vars']['trajectory'] = $('#{{componentId}}-{{sectionId}}-trajectory').find('input[type=radio]:checked').data('value');
+
+                $('#{{componentId}}-{{sectionId}}-trajectory').click(function() {
+                    var value = $(this).find('input[type=radio]:checked').data('value');
+
+                    dataCollectionSectionForm['vars']['trajectory'] = value;
+
+                    if (value == 'no') {
+                        $('#{{componentId}}-{{sectionId}}-consecutive_days').attr('disabled', true);
+                        $('#{{componentId}}-{{sectionId}}-consecutive_days').val('0');
+                        $('#{{componentId}}-{{sectionId}}-trajectory_percent').attr('disabled', true);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_percent').val('0');
+                        $('#{{componentId}}-{{sectionId}}-trajectory_max_invest_amount').attr('disabled', true);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_max_invest_amount').val('');
+                        $('#{{componentId}}-{{sectionId}}-trajectory_invest_amount').attr('disabled', true);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_invest_amount').val('');
+                    } else if (value == 'up') {
+                        $('#{{componentId}}-{{sectionId}}-consecutive_days').attr('disabled', false);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_percent').attr('disabled', false);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_max_invest_amount').attr('disabled', false);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_invest_amount').attr('disabled', false);
+                    } else if (value == 'down') {
+                        $('#{{componentId}}-{{sectionId}}-consecutive_days').attr('disabled', false);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_percent').attr('disabled', false);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_max_invest_amount').attr('disabled', false);
+                        $('#{{componentId}}-{{sectionId}}-trajectory_invest_amount').attr('disabled', false);
+                    }
+                });
+            }
+        },
+        '{{componentId}}-{{sectionId}}-consecutive_days'                        : { },
+        '{{componentId}}-{{sectionId}}-trajectory_percent'                      : { },
+        '{{componentId}}-{{sectionId}}-trajectory_max_invest_amount'            : { },
+        '{{componentId}}-{{sectionId}}-trajectory_invest_amount'                : { },
+        '{{componentId}}-{{sectionId}}-form'                                    : {
+            ignore      : ':submit, :reset, :image, :hidden, .ignore, .cr-slider',
+            rules: {
+            },
+            messages: {
+            }
+        }
+    });
+</script>
