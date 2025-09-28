@@ -1,0 +1,331 @@
+{% if widget['data']['settings']['portfolios'] is defined and is_array(widget['data']['settings']['portfolios']) %}
+    {% set portfolio = widget['data']['settings']['portfolios'] %}
+    <div class="row">
+        <div class="col">
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'portfolio',
+                    'fieldLabel'                     : 'ETF Portfolio : ' ~ portfolio['name'],
+                    'fieldType'                      : 'html',
+                    'fieldAdditionalClass'           : 'mb-0 portfolio',
+                    'fieldHelp'                      : false,
+                    'fieldHelpTooltipContent'        : 'portfolio for the user',
+                    'fieldRequired'                  : false,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnUpdate'           : true,
+                    'fieldHtmlContent'               : ''
+                ]
+            )}}
+        </div>
+    </div>
+    {% set currencySymbol = '$' %}
+    {% set portfolioColor = 'primary' %}
+    {% if portfolio['status'] == 'positive' %}
+        {% set portfolioColor = 'success' %}
+    {% elseif portfolio['status'] == 'negative' %}
+        {% set portfolioColor = 'danger' %}
+    {% endif %}
+    {% set portfolioInvestedAmount = currencySymbol ~ portfolio['invested_amount'] %}
+    {% set portfolioXirr = '<span class="text-' ~ portfolioColor ~ '">' ~ portfolio['xirr'] ~ '%</span>' %}
+    {% set portfolioTotalValue = currencySymbol ~ portfolio['total_value'] %}
+    {% set portfolioReturnAmount = '<span class="text-' ~ portfolioColor ~ '">' ~ currencySymbol ~ portfolio['return_amount'] ~ '</span>' %}
+    {% set portfolioSoldAmount = currencySymbol ~ portfolio['sold_amount'] %}
+    {% set portfolioProfitLoss = '<span class="text-' ~ portfolioColor ~ '">' ~ currencySymbol ~ portfolio['profit_loss'] ~ '</span>' %}
+    <div class="row">
+        <div class="col">
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'invested_amount',
+                    'fieldLabel'                     : 'Invested Amount',
+                    'fieldType'                      : 'html',
+                    'fieldHelp'                      : true,
+                    'fieldHelpTooltipContent'        : 'Invested Amount',
+                    'fieldRequired'                  : false,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnUpdate'           : true,
+                    'fieldHtmlContent'               : portfolioInvestedAmount
+                ]
+            )}}
+        </div>
+        <div class="col">
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'xirr',
+                    'fieldLabel'                     : 'Xirr',
+                    'fieldType'                      : 'html',
+                    'fieldHelp'                      : true,
+                    'fieldHelpTooltipContent'        : 'XIRR of portfolio',
+                    'fieldRequired'                  : false,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnUpdate'           : true,
+                    'fieldHtmlContent'               : portfolioXirr
+                ]
+            )}}
+        </div>
+        <div class="col">
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'total_value',
+                    'fieldLabel'                     : 'Total value',
+                    'fieldType'                      : 'html',
+                    'fieldHelp'                      : true,
+                    'fieldHelpTooltipContent'        : 'Total value',
+                    'fieldRequired'                  : false,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnUpdate'           : true,
+                    'fieldHtmlContent'               : portfolioTotalValue
+                ]
+            )}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'return_amount',
+                    'fieldLabel'                     : 'Return Amount',
+                    'fieldType'                      : 'html',
+                    'fieldHelp'                      : true,
+                    'fieldHelpTooltipContent'        : 'Return Amount.',
+                    'fieldRequired'                  : false,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnUpdate'           : true,
+                    'fieldHtmlContent'               : portfolioReturnAmount
+                ]
+            )}}
+        </div>
+        <div class="col">
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'sold_amount',
+                    'fieldLabel'                     : 'Sold Amount',
+                    'fieldType'                      : 'html',
+                    'fieldHelp'                      : true,
+                    'fieldHelpTooltipContent'        : 'Sold Amount',
+                    'fieldRequired'                  : false,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnUpdate'           : true,
+                    'fieldHtmlContent'               : portfolioSoldAmount
+                ]
+            )}}
+        </div>
+        <div class="col">
+            {{adminltetags.useTag('fields',
+                [
+                    'component'                      : component,
+                    'componentName'                  : componentName,
+                    'componentId'                    : componentId,
+                    'sectionId'                      : sectionId,
+                    'fieldId'                        : 'profit_loss',
+                    'fieldLabel'                     : 'Profit/Loss',
+                    'fieldType'                      : 'html',
+                    'fieldHelp'                      : true,
+                    'fieldHelpTooltipContent'        : 'Profit/Loss.',
+                    'fieldRequired'                  : false,
+                    'fieldBazScan'                   : true,
+                    'fieldBazPostOnUpdate'           : true,
+                    'fieldHtmlContent'               : portfolioProfitLoss
+                ]
+            )}}
+        </div>
+    </div>
+{% else %}
+    <div class="row text-center m-2" id="{{componentId}}-{{sectionId}}-portfolio-{{widget['data']['id']}}-widget-error" z-index>
+        <div class="col">
+            <h6><i class="fa fa-fw fa-info-circle text-danger"></i> Please edit widget and add portfolio via settings.</h6>
+        </div>
+    </div>
+{% endif %}
+{{adminltetags.useTag('modal',
+    [
+        'component'                 : component,
+        'componentName'             : componentName,
+        'componentId'               : componentId,
+        'sectionId'                 : sectionId,
+        'modalId'                   : 'settings-portfolio-' ~ widget['data']['id'],
+        'modalBodyInclude'          : 'widgets/etfportfolio/settings',
+        'modalSize'                 : 'lg',
+        'modalHeader'               : true,
+        'modalFooter'               : true,
+        'modalAdditionalClasses'    : 'widgets-setting-modal',
+        'modalTitle'                : '<i class="fa fas fa-fw fa-cog"></i> PORTFOLIO SETTINGS',
+        'modalFooterButtons'        :
+            [
+            'component'                     : component,
+            'componentName'                 : componentName,
+            'componentId'                   : componentId,
+            'parentComponentId'             : parent,
+            'sectionId'                     : sectionId,
+            'buttonType'                    : 'button',
+            'buttons'                       :
+                    [
+                        'settings-button-save' : [
+                            'title'                   : 'save',
+                            'buttonId'                : componentId ~ '-' ~ sectionId ~ '-settings-portfolio-' ~ widget['data']['id'] ~ '-button-save',
+                            'type'                    : 'primary',
+                            'position'                : 'right',
+                            'disabled'                : false,
+                            'icon'                    : 'cog fa-spin',
+                            'iconHidden'              : true
+                        ]
+                    ]
+            ]
+    ]
+)}}
+{% set widgetsData = json_encode(widget, 16) %}
+<script>
+/* globals paginatedPNotify BazHelpers BazContentFields */
+var dataCollectionComponent, dataCollectionSection;
+
+if (!window['dataCollection']['{{componentId}}']) {
+    dataCollectionComponent =
+        window['dataCollection']['{{componentId}}'] = { };
+} else {
+    dataCollectionComponent =
+        window['dataCollection']['{{componentId}}'];
+}
+if (!dataCollectionComponent['{{componentId}}-{{sectionId}}']) {
+    dataCollectionSection =
+        dataCollectionComponent['{{componentId}}-{{sectionId}}'] = { };
+} else {
+    dataCollectionSection =
+        dataCollectionComponent['{{componentId}}-{{sectionId}}'];
+}
+
+var widgetsData = { };
+widgetsData = JSON.parse('{{widgetsData}}');
+
+dataCollectionSection['{{componentId}}-{{sectionId}}-portfolio-' + widgetsData["data"]["id"] + '-portfolios'] =
+    {
+        'placeholder'   : 'SELECT PORTFOLIO TO SHOW',
+        afterInit : function() {
+            $('#{{componentId}}-{{sectionId}}-settings-portfolio-' + widgetsData["data"]["id"] + '-button-save').off();
+            $('#{{componentId}}-{{sectionId}}-settings-portfolio-' + widgetsData["data"]["id"] + '-button-save').click(function(e) {
+                e.preventDefault();
+
+                var grid = dataCollectionComponent['{{componentId}}-main']['grid'];
+
+                $(this).attr('disabled', true);
+                $(this).children('i').attr('hidden', false);
+
+                var gridWidgets = grid.save(false, false);
+                var widgets = [];
+                var el = $(this).parents('.grid-stack-item')[0];
+                var widgetId = $(el).attr('gs-id');
+
+                $(gridWidgets).each(function(i, widget) {
+                    if (widget['id'] == widgetId) {
+                        widgets.push(gridWidgets[i]);
+                        return false;
+                    }
+                });
+
+                var postData = { };
+                postData[$('#security-token').attr('name')] = $('#security-token').val();
+                postData['dashboard_id'] = $('#{{componentId}}-main-dashboards').select2().val();
+                postData['widgets'] = widgets;
+                postData['widgets'][0]['portfolios'] = $('#{{componentId}}-{{sectionId}}-portfolio-' + widgetsData["data"]["id"] + '-portfolios').select2().val();
+
+                $.post('{{links.url("dashboards/updateWidgetToDashboard")}}', postData, function(response) {
+                    $('#{{componentId}}-{{sectionId}}-modal-button-save').attr('disabled', false);
+                    $('#{{componentId}}-{{sectionId}}-modal-button-save').children('i').attr('hidden', true);
+
+                    if (response.tokenKey && response.token) {
+                        $("#security-token").attr("name", response.tokenKey);
+                        $("#security-token").val(response.token);
+                    }
+
+                    if (response.responseCode === 0) {
+                        $('#{{componentId}}-{{sectionId}}-settings-portfolio-' + widgetsData["data"]["id"] + '-button-save').attr('disabled', false);
+                        $('#{{componentId}}-{{sectionId}}-settings-portfolio-' + widgetsData["data"]["id"] + '-button-save').children('i').attr('hidden', true);
+                        $('#{{componentId}}-{{sectionId}}-settings-portfolio-' + widgetsData["data"]["id"] + '-button-save').parents('.modal').modal('hide');
+                        var postDataGetWidget = { };
+                        postDataGetWidget[$('#security-token').attr('name')] = $('#security-token').val();
+                        postDataGetWidget['dashboard_id'] = $('#{{componentId}}-main-dashboards').select2().val();
+                        postDataGetWidget['widget_id'] = postData['widgets'][0]['id'];
+
+                        var responseMessage = response.responseMessage;
+
+                        $.post('{{links.url("dashboards/getDashboardWidgets")}}', postDataGetWidget, function(response) {
+                            if (response.tokenKey && response.token) {
+                                $("#security-token").attr("name", response.tokenKey);
+                                $("#security-token").val(response.token);
+                            }
+
+                            if (response.responseCode === 0) {
+                                paginatedPNotify('success', {'text' : responseMessage});
+                                $('.modal-backdrop').remove();
+
+                                var items = [];
+                                items[0] = { };
+                                items[0]['el'] = el;
+                                items[0]['id'] = response.responseData['widgetsData'][0]['id'];
+                                items[0]['widget_id'] = response.responseData['widgetsData'][0]['widget']['id'];
+                                items[0]['dashboard_id'] = response.responseData['widgetsData'][0]['dashboard_id'];
+                                items[0]['method'] = response.responseData['widgetsData'][0]['widget']['method'];
+
+                                $('body').trigger('widgetUpdate', {'items' : items});
+                            } else {
+                                paginatedPNotify('error', {'text' : response.responseMessage});
+                            }
+                        }, 'json');
+                    } else {
+                        paginatedPNotify('error', {'text' : response.responseMessage});
+                    }
+                }, 'json');
+            });
+        }
+    };
+
+if (!dataCollectionSection['{{componentId}}-{{sectionId}}-portfolio-widgets']) {
+    dataCollectionSection['{{componentId}}-{{sectionId}}-portfolio-widgets'] = { };
+    dataCollectionSection['{{componentId}}-{{sectionId}}-portfolio-widgets'][widgetsData['data']['id']] = widgetsData;
+} else {
+    dataCollectionSection['{{componentId}}-{{sectionId}}-portfolio-widgets'][widgetsData['data']['id']] = widgetsData;
+}
+
+dataCollectionSection['{{componentId}}-{{sectionId}}-portfolio-func'] = function() {
+    //
+};
+
+if (dataCollectionSection['{{componentId}}-{{sectionId}}-portfolio-func']) {
+    dataCollectionSection['{{componentId}}-{{sectionId}}-portfolio-func']();
+}
+
+$('body').off('widgetRemove');
+$('body').on('widgetRemove', function(e, data) {
+    //
+});
+
+$(document).ready(function() {
+    BazContentFields.init({
+        'componentId'   : "{{componentId}}",
+        'sectionId'     : "{{componentId}}-{{sectionId}}",
+        'fieldId'       : '{{componentId}}-{{sectionId}}-portfolio-' + widgetsData["data"]["id"] + '-portfolios'
+    });
+});
+</script>

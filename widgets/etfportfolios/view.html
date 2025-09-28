@@ -1,0 +1,23 @@
+{% if widget['data']['getWidgetData'] is not defined %}
+    {{adminltetags.useTag('card',
+        [
+            'component'                     : component,
+            'componentName'                 : componentName,
+            'componentId'                   : componentId,
+            'parentComponentId'             : parent,
+            'sectionId'                     : sectionId,
+            'cardId'                        : componentId ~ '-' ~ sectionId ~ '-portfolio',
+            'cardHeader'                    : true,
+            'cardFooter'                    : false,
+            'cardWidgetMode'                : true,
+            'cardType'                      : 'primary',
+            'cardIcon'                      : 'eye',
+            'cardTitle'                     : 'ETF Portfolios (Consolidated)',
+            'cardShowTools'                 : ['settings', 'move', 'widgetRemove'],
+            'cardAdditionalClass'           : 'rounded-0 border',
+            'cardBodyContent'               : ''
+        ]
+    )}}
+{% else %}
+    {% include 'widgets/etfportfolios/portfolio.html' %}
+{% endif %}

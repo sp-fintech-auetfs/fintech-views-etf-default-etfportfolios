@@ -1,0 +1,32 @@
+{% set selectedPortfolio = [] %}
+{% if widget['data']['settings']['portfolios']['id'] is defined %}
+    {% set selectedPortfolio = widget['data']['settings']['portfolios']['id'] %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        {{adminltetags.useTag('fields',
+            [
+                'component'                      : component,
+                'componentName'                  : componentName,
+                'componentId'                    : componentId,
+                'sectionId'                      : sectionId,
+                'fieldId'                        : 'consolidated-' ~ widget['data']['id'] ~ '-portfolios',
+                'fieldLabel'                     : 'Portfolios',
+                'fieldType'                      : 'select2',
+                'fieldHelp'                      : true,
+                'fieldHelpTooltipContent'        : 'Select consolidated portfolio to show.',
+                'fieldBazScan'                   : true,
+                'fieldBazJstreeSearch'           : false,
+                'fieldBazPostOnCreate'           : false,
+                'fieldBazPostOnUpdate'           : false,
+                'fieldRequired'                  : true,
+                'fieldDataSelect2Multiple'       : true,
+                'fieldDataSelect2Options'        : widget['settings']['portfolios'],
+                'fieldDataSelect2OptionsKey'     : 'id',
+                'fieldDataSelect2OptionsValue'   : 'name',
+                'fieldDataSelect2OptionsArray'   : true,
+                'fieldDataSelect2OptionsSelected': selectedPortfolio
+            ]
+        )}}
+    </div>
+</div>
