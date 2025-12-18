@@ -1,0 +1,47 @@
+
+{% set amcsHtml = '' %}
+{% if portfolio['allocation']['by_amcs'] is defined and portfolio['allocation']['by_amcs']|length > 0 %}
+    {% for amc in portfolio['allocation']['by_amcs'] %}
+        {% set returnColor = 'success' %}
+        {% if amc['return_percent'] < amc['invested_percent'] %}
+            {% set returnColor = 'warning' %}
+        {% endif %}
+        {% set amcsHtml = amcsHtml ~ '<tr>' ~
+        '           <td>' ~ amc['amc_id'] ~ '</td>' ~
+        '           <td>' ~ amc['amc_name'] ~ '</td>' ~
+        '           <td>' ~ amc['invested_amount'] ~ '</td>' ~
+        '           <td>' ~ amc['invested_percent'] ~ '</td>' ~
+        '           <td>' ~ amc['return_amount'] ~ '</td>' ~
+        '           <td class="text-' ~ returnColor ~ '">' ~ amc['return_percent'] ~ '</td>' ~
+        '   </tr>'
+        %}
+    {% endfor %}
+    <div class="row" id="allocation-amcs">
+        <div class="col">
+            <div class="text-center" id="allocation-amcs-amount"></div>
+        </div>
+        <div class="col">
+            <div class="text-center" id="allocation-amcs-percent"></div>
+        </div>
+    </div>
+    <hr>
+{% endif %}
+<div class="row">
+    <div class="col">
+        <table id="{{componentId}}-{{sectionId}}-allocation-amcs-table" class="table table-sm table-hover responsive nowrap mb-0" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th class="text-uppercase">AMC ID</th>
+                    <th class="text-uppercase">AMC</th>
+                    <th class="text-uppercase">Invested Amount</th>
+                    <th class="text-uppercase">Invested %</th>
+                    <th class="text-uppercase">Return Amount</th>
+                    <th class="text-uppercase">Return %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{amcsHtml}}
+            </tbody>
+        </table>
+    </div>
+</div>

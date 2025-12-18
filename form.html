@@ -2365,6 +2365,53 @@ dataCollectionSectionForm['funcs']['initDatatables'] = function(type) {
         }
     }
 
+    if (type === 'allocation-amcs') {
+        if ($.fn.DataTable && !$.fn.DataTable.isDataTable('#{{componentId}}-{{sectionId}}-allocation-amcs-table')) {
+            $('#{{componentId}}-{{sectionId}}-allocation-amcs-table').DataTable({
+                columns: [
+                    {orderable: true},
+                    {orderable: true},
+                    {orderable: true},
+                    {orderable: true},
+                    {orderable: true},
+                    {orderable: true}
+                ],
+                lengthMenu: [
+                    [20, 50, 100, -1],
+                    [20, 50, 100, 'All']
+                ],
+                dom: '<"row mb-1"<"col-md-3 col-xs-12"B><"col-md-3 col-xs-12"l><"col-md-3 col-xs-12"f><"col-md-3 col-xs-12"p>>' +
+                     '<"row mb-1"<"col"tr>>' +
+                     '<"row"<"col-md-6 col-xs-12"i><"col-md-6 col-xs-12"p>>',
+                buttons: [
+                    {
+                        extend          : 'collection',
+                        text            : 'Export',
+                        className       : 'btn-sm btn-info',
+                        buttons         : [{
+                                            text            : 'Excel',
+                                            title           : 'Export transactions list',
+                                            extend          : 'excelHtml5',
+                                            footer          : false,
+                                            exportOptions   : {
+                                                                columns: ':visible'
+                                                            }
+                                        },
+                                        {
+                                            text            : 'CSV',
+                                            extend          : 'csvHtml5',
+                                            fieldSeparator  : ',',
+                                            exportOptions   : {
+                                                                columns: ':visible'
+                                                            }
+                                        }
+                                        ]
+                    }
+                ]
+            });
+        }
+    }
+
     if (type === 'allocation-categories') {
         if ($.fn.DataTable && !$.fn.DataTable.isDataTable('#{{componentId}}-{{sectionId}}-allocation-categories-table')) {
             var categoriesTable = $('#{{componentId}}-{{sectionId}}-allocation-categories-table').DataTable({
@@ -2545,6 +2592,39 @@ dataCollectionSectionForm['funcs']['initCharts'] = function() {
             });
         }
 
+        if (dataCollectionSectionForm['vars']['allocation']['by_amcs'] &&
+            Object.keys(dataCollectionSectionForm['vars']['allocation']['by_amcs']).length > 0
+        ) {
+            dataCollectionSectionForm['funcs']['initDatatables']('allocation-amcs');
+
+            var byAmcsData = [];
+            for (var amcsInitData in dataCollectionSectionForm['vars']['allocation']['by_amcs']) {
+                byAmcsData.push(dataCollectionSectionForm['vars']['allocation']['by_amcs'][amcsInitData]);
+            }
+
+            dataCollectionSectionForm['vars']['allocationCharts']['by_amcs'] = { };
+
+            var byAmcsCharts = ['amount', 'percent'];
+
+            $(byAmcsCharts).each(function(index, value) {
+                dataCollectionSectionForm['vars']['allocationCharts']['by_amcs'][value] = echarts.init(document.getElementById('allocation-amcs-' + value), 'macarons');
+
+                dataCollectionSectionForm['vars']['allocationCharts']['by_amcs'][value].on('rendered', function() {
+                    if (dataCollectionSectionForm['vars'] &&
+                        dataCollectionSectionForm['vars']['allocationCharts'] &&
+                        dataCollectionSectionForm['vars']['allocationCharts']['by_amcs'] &&
+                        dataCollectionSectionForm['vars']['allocationCharts']['by_amcs'][value]
+                    ) {
+                        dataCollectionSectionForm['vars']['allocationCharts']['by_amcs'][value].resize({
+                            height: 400
+                        });
+                    }
+                });
+
+                dataCollectionSectionForm['funcs']['generateAllocationCharts']('amcs', byAmcsData, value);
+            });
+        }
+
         if (dataCollectionSectionForm['vars']['allocation']['by_categories'] &&
             Object.keys(dataCollectionSectionForm['vars']['allocation']['by_categories']).length > 0
         ) {
@@ -2616,7 +2696,9 @@ dataCollectionSectionForm['funcs']['initCharts'] = function() {
 dataCollectionSectionForm['funcs']['generateAllocationCharts'] = function(by, data, value, type = 'bar') {
     var options = {
         title: {
-            text: 'INVESTMENTS VS RETURNS (' + value.toUpperCase() + ')'
+            text: 'Investments VS Returns (' + String(value).charAt(0).toUpperCase() + String(value).slice(1) + ')',
+            left: 'left',
+            top: 'top'
         },
         tooltip: {
             trigger: 'axis',
@@ -2627,12 +2709,15 @@ dataCollectionSectionForm['funcs']['generateAllocationCharts'] = function(by, da
               type: 'shadow'
             }
         },
-        legend: {},
+        legend: {
+            top: 30,
+            center: 'center'
+        },
         xAxis: {
             name: by.toUpperCase(),
             nameLocation: 'middle',
             nameTextStyle: {
-                lineHeight: 50
+                lineHeight: 30
             },
             data: []
         },
@@ -2669,7 +2754,9 @@ dataCollectionSectionForm['funcs']['generateAllocationCharts'] = function(by, da
     var yData = [];
 
     if (by === 'schemes') {
-        xData = data.map(row => row.scheme_id)
+        xData = data.map(row => row.scheme_id);
+    } else if (by === 'amcs') {
+        xData = data.map(row => row.amc_id);
     } else {
         xData = data.map(row => row.category.name);
     }
@@ -2679,7 +2766,7 @@ dataCollectionSectionForm['funcs']['generateAllocationCharts'] = function(by, da
     if (value === 'amount') {
         options['yAxis']['nameTextStyle']['lineHeight'] = 100;
     } else {
-        options['yAxis']['nameTextStyle']['lineHeight'] = 60;
+        options['yAxis']['nameTextStyle']['lineHeight'] = 50;
     }
     options['xAxis']['data'] = xData;
     options['series'] = series
