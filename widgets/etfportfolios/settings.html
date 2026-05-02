@@ -1,6 +1,10 @@
-{% set selectedPortfolio = [] %}
+{% set selectedPortfolio = '' %}
+{% set portfolios = [] %}
 {% if widget['data']['settings']['portfolios']['id'] is defined %}
     {% set selectedPortfolio = widget['data']['settings']['portfolios']['id'] %}
+{% endif %}
+{% if widget['settings']['portfolios'] is defined %}
+    {% set portfolios = widget['settings']['portfolios'] %}
 {% endif %}
 <div class="row">
     <div class="col">
@@ -10,18 +14,17 @@
                 'componentName'                  : componentName,
                 'componentId'                    : componentId,
                 'sectionId'                      : sectionId,
-                'fieldId'                        : 'consolidated-' ~ widget['data']['id'] ~ '-portfolios',
+                'fieldId'                        : 'portfolio-' ~ widget['data']['id'] ~ '-portfolios',
                 'fieldLabel'                     : 'Portfolios',
                 'fieldType'                      : 'select2',
                 'fieldHelp'                      : true,
-                'fieldHelpTooltipContent'        : 'Select consolidated portfolio to show.',
+                'fieldHelpTooltipContent'        : 'Select portfolio to show.',
                 'fieldBazScan'                   : true,
                 'fieldBazJstreeSearch'           : false,
                 'fieldBazPostOnCreate'           : false,
                 'fieldBazPostOnUpdate'           : false,
                 'fieldRequired'                  : true,
-                'fieldDataSelect2Multiple'       : true,
-                'fieldDataSelect2Options'        : widget['settings']['portfolios'],
+                'fieldDataSelect2Options'        : portfolios,
                 'fieldDataSelect2OptionsKey'     : 'id',
                 'fieldDataSelect2OptionsValue'   : 'name',
                 'fieldDataSelect2OptionsArray'   : true,

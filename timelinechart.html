@@ -1,4 +1,4 @@
-<!-- htmlhint tag-pair:false --><!-- htmlmin:ignore -->
+<!-- htmlhint tag-pair:false -->
 {% set timelineButtons = [] %}
 {% if portfolioPerformancesChunks is defined and portfolioPerformancesChunks != false %}
     {% if portfolioPerformancesChunks['week'] is defined and portfolioPerformancesChunks['week']|length > 0 %}
@@ -498,6 +498,14 @@ dataCollectionSectionForm['funcs']['initPerformancesChart'] = function() {
                         dataCollectionSectionForm['vars']['performancesChartOptions']['xAxis']['data'] = dataCollectionSectionForm['vars'][time + 'Data'].map(row => row.date);
                     }
 
+                    //Reset Zoom
+                    dataCollectionSectionForm['vars']['performancesChart'].dispatchAction({
+                        type: 'dataZoom',
+                        dataZoomIndex: 0,
+                        start: 0,
+                        end: 100
+                    });
+
                     dataCollectionSectionForm['vars']['performancesChart'].setOption(dataCollectionSectionForm['vars']['performancesChartOptions']);
                 }
             }
@@ -710,4 +718,3 @@ setTimeout(function(){
 }, 1000);
 
 </script>
-<!-- htmlmin:ignore -->

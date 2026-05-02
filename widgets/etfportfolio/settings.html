@@ -1,6 +1,10 @@
 {% set selectedPortfolio = '' %}
+{% set portfolios = [] %}
 {% if widget['data']['settings']['portfolios']['id'] is defined %}
     {% set selectedPortfolio = widget['data']['settings']['portfolios']['id'] %}
+{% endif %}
+{% if widget['settings']['portfolios'] is defined %}
+    {% set portfolios = widget['settings']['portfolios'] %}
 {% endif %}
 <div class="row">
     <div class="col">
@@ -20,7 +24,7 @@
                 'fieldBazPostOnCreate'           : false,
                 'fieldBazPostOnUpdate'           : false,
                 'fieldRequired'                  : true,
-                'fieldDataSelect2Options'        : widget['settings']['portfolios'],
+                'fieldDataSelect2Options'        : portfolios,
                 'fieldDataSelect2OptionsKey'     : 'id',
                 'fieldDataSelect2OptionsValue'   : 'name',
                 'fieldDataSelect2OptionsArray'   : true,
